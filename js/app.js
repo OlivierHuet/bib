@@ -1,9 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Constants ---
-    const TEXT_SCAN_STORAGE_KEY = 'bib-text-scans';
-    const CAMERA_SCAN_STORAGE_KEY = 'bib-camera-scans';
-
-    // --- Screen Management Elements ---
+    // --- Éléments du DOM ---
     const selectionScreen = document.getElementById('selection-screen');
     const textScannerScreen = document.getElementById('text-scanner-screen');
     const cameraScannerScreen = document.getElementById('camera-scanner-screen');
@@ -12,52 +8,74 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSelectText = document.getElementById('btn-select-text');
     const backButtons = document.querySelectorAll('.btn-back');
 
-    // --- Text Scanner Elements ---
     const barcodeInput = document.getElementById('barcode-input');
-    const textHistoryList = document.getElementById('text-history-list');
-
-    // --- Camera Scanner Elements ---
-    const cameraReader = document.getElementById('reader');
     const cameraScanResult = document.getElementById('camera-scan-result');
-    const cameraHistoryList = document.getElementById('camera-history-list');
-    let html5QrCode; // Will be initialized later
 
-    // --- Screen Management Logic ---
-    const showScreen = (screen) => {
-        selectionScreen.classList.add('hidden');
-        textScannerScreen.classList.add('hidden');
-        cameraScannerScreen.classList.add('hidden');
+    // --- State de l'application ---
+    let barcodeHistory = [];
+    const historyKey = 'barcodeHistory';
+    let html5QrCode = null;
 
-        if (screen) {
-            screen.classList.remove('hidden');
-        }
-    };
+    // --- Fonctions ---
 
-    // --- History & Storage Logic ---
-    const renderHistory = (listElement, history) => {
-        listElement.innerHTML = '';
-        history.forEach(code => {
-            const li = document.createElement('li');
-            li.textContent = code;
-            listElement.appendChild(li);
+    /**
+     * Affiche un écran et masque les autres.
+     * @param {HTMLElement} screenToShow L'écran à afficher.
+     */
+    function showScreen(screenToShow) {
+        [selectionScreen, textScannerScreen, cameraScannerScreen].forEach(screen => {
+            screen.classList.add('hidden');
         });
-    };
+        screenToShow.classList.remove('hidden');
+    }
 
-    const getHistory = (storageKey) => {
-        return JSON.parse(localStorage.getItem(storageKey)) || [];
-    };
+    /**
+     * Charge l'historique depuis le localStorage.
+     */
+    function loadHistory() {
+        barcodeHistory = JSON.parse(localStorage.getItem(historyKey)) || [];
+    }
 
-    const saveScan = (code, storageKey) => {
-        const history = getHistory(storageKey);
-        if (code && !history.includes(code)) {
-            history.unshift(code);
-            localStorage.setItem(storageKey, JSON.stringify(history));
+    /**
+     * Affiche l'historique dans toutes les listes d'historique.
+     */
+    function renderHistory() {
+        const historyLists = document.querySelectorAll('.history-list');
+        historyLists.forEach(list => {
+            list.innerHTML = ''; // Clear the list first
+            barcodeHistory.forEach(barcode => {
+                const li = document.createElement('li');
+                li.textContent = barcode;
+                list.appendChild(li);
+            });
+        });
+    }
+
+    /**
+     * Ajoute un code-barres à l'historique, sauvegarde et met à jour l'affichage.
+     * @param {string} barcode Le code-barres à ajouter.
+     */
+    function addBarcode(barcode) {
+        if (barcode && !barcodeHistory.includes(barcode)) { // Évite les doublons
+            barcodeHistory.unshift(barcode); // Ajoute au début pour voir les plus récents en premier
+            localStorage.setItem(historyKey, JSON.stringify(barcodeHistory));
+            renderHistory();
         }
-        return history;
-    };
+    }
 
-    // --- Camera Logic ---
-    const startCamera = () => {
+    /**
+     * Gère le succès du scan par caméra.
+     * @param {string} decodedText Le code-barres décodé.
+     */
+    function onScanSuccess(decodedText) {
+        cameraScanResult.textContent = `✅ Scan réussi : ${decodedText}`;
+        addBarcode(decodedText);
+    }
+
+    /**
+     * Démarre le scanner de la caméra.
+     */
+    function startCameraScanner() {
         if (typeof Html5Qrcode === 'undefined') {
             cameraScanResult.textContent = "❌ Erreur: La librairie de scan n'a pas pu être chargée.";
             return;
@@ -66,75 +84,79 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!html5QrCode) {
             html5QrCode = new Html5Qrcode("reader");
         }
-        cameraScanResult.textContent = "Démarrage de la caméra...";
-        
-        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-            cameraScanResult.textContent = `✅ Scan réussi : ${decodedText}`;
-            const updatedHistory = saveScan(decodedText, CAMERA_SCAN_STORAGE_KEY);
-            renderHistory(cameraHistoryList, updatedHistory);
-        };
 
+        if (html5QrCode.isScanning) {
+            return;
+        }
+        
+        cameraScanResult.textContent = "Démarrage de la caméra...";
         const config = { fps: 10, qrbox: { width: 250, height: 250 } };
 
-        html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback)
+        html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
+            .then(() => {
+                console.log("Scanner démarré.");
+                showScreen(cameraScannerScreen);
+                renderHistory(); // Affiche l'historique sur l'écran caméra
+            })
             .catch(err => {
                 cameraScanResult.textContent = `❌ Erreur: ${err}. Assurez-vous d'utiliser HTTPS.`;
-                console.error("Unable to start scanning.", err);
+                console.error("Erreur au démarrage de la caméra : ", err);
+                showScreen(selectionScreen); // Retour au menu en cas d'erreur
             });
-    };
+    }
 
-    const stopCamera = () => {
+    /**
+     * Arrête le scanner de la caméra.
+     */
+    function stopCameraScanner() {
         if (html5QrCode && html5QrCode.isScanning) {
-            html5QrCode.stop().then(() => {
-                console.log("QR Code scanning stopped.");
-                cameraScanResult.textContent = "";
-            }).catch(err => {
-                console.error("Failed to stop scanning.", err);
-            });
+            html5QrCode.stop()
+                .then(() => {
+                    console.log("Scanner arrêté.");
+                    cameraScanResult.textContent = "";
+                })
+                .catch(err => console.error("Erreur à l'arrêt du scanner : ", err));
         }
-    };
+    }
 
-    // --- Event Listeners ---
+    // --- Écouteurs d'événements ---
 
-    // Navigation
+    btnSelectCamera.addEventListener('click', startCameraScanner);
+
     btnSelectText.addEventListener('click', () => {
         showScreen(textScannerScreen);
-        const history = getHistory(TEXT_SCAN_STORAGE_KEY);
-        renderHistory(textHistoryList, history);
-        setTimeout(() => barcodeInput.focus(), 0);
-    });
-
-    btnSelectCamera.addEventListener('click', () => {
-        showScreen(cameraScannerScreen);
-        const history = getHistory(CAMERA_SCAN_STORAGE_KEY);
-        renderHistory(cameraHistoryList, history);
-        startCamera();
+        renderHistory(); // Affiche l'historique sur l'écran texte
+        setTimeout(() => barcodeInput.focus(), 0); // Focus après la transition
     });
 
     backButtons.forEach(button => {
         button.addEventListener('click', () => {
-            stopCamera(); // Stop camera if it's running
+            stopCameraScanner();
             showScreen(selectionScreen);
         });
     });
 
-    // Text Scanner Logic
-    barcodeInput.addEventListener('keydown', (e) => {
+    barcodeInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
-            const code = barcodeInput.value.trim();
-            if (code) {
-                const updatedHistory = saveScan(code, TEXT_SCAN_STORAGE_KEY);
-                renderHistory(textHistoryList, updatedHistory);
+            const barcode = barcodeInput.value.trim();
+            if (barcode) {
+                addBarcode(barcode);
                 barcodeInput.value = '';
             }
         }
     });
     
+    // Maintient le focus sur l'input en mode texte
     barcodeInput.addEventListener('blur', () => {
-        setTimeout(() => barcodeInput.focus(), 100);
+        // Le timeout évite des problèmes si on change d'écran
+        if (!textScannerScreen.classList.contains('hidden')) {
+            setTimeout(() => barcodeInput.focus(), 100);
+        }
     });
 
-    // --- Initial State ---
-    showScreen(selectionScreen);
+    // --- Initialisation ---
+    loadHistory();
+    renderHistory(); // Initial render in case there's old data
+    showScreen(selectionScreen); // Affiche l'écran de sélection au démarrage
 });

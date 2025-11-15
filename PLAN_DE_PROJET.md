@@ -22,12 +22,21 @@ Ce document sert à suivre l'avancement du développement de l'application "Bib"
     - [x] Assurer la mise au focus automatique de l'input.
     - **Validation :** Utiliser le mode lecteur externe, ajouter des entrées et vérifier qu'elles persistent après rechargement.
 
-- [ ] **Étape 4 : Implémentation du Mode Caméra**
-    - [ ] Ajouter les éléments HTML (`div#reader`, `ul`) à l'écran de la caméra.
-    - [ ] Inclure la librairie `html5-qrcode` dans `index.html`.
-    - [ ] Implémenter la logique d'initialisation, de scan, et d'arrêt de la caméra.
-    - [ ] Connecter le scan réussi à la fonction de sauvegarde (`localStorage`).
+- [x] **Étape 4 : Implémentation du Mode Caméra**
+    - [x] Ajouter les éléments HTML (`div#reader`, `ul`) à l'écran de la caméra.
+    - [x] Inclure la librairie `html5-qrcode` dans `index.html`.
+    - [x] Implémenter la logique d'initialisation, de scan, et d'arrêt de la caméra.
+    - [x] Connecter le scan réussi à la fonction de sauvegarde (`localStorage`).
     - **Validation :** (Sur HTTPS) Utiliser le mode caméra, scanner un code et vérifier qu'il s'ajoute à l'historique.
+
+- [ ] **Étape 4.1 : Unification des Historiques**
+    - [ ] Modifier la logique pour que les deux modes de scan (caméra et lecteur externe) utilisent la même liste d'historique (`<ul>`) et la même clé `localStorage`.
+    - **Validation :**
+        1.  Scanner un code-barres en mode lecteur externe.
+        2.  Passer en mode caméra et vérifier que le code précédent est visible.
+        3.  Scanner un nouveau code-barres avec la caméra.
+        4.  Retourner au mode lecteur externe et vérifier que les deux codes sont présents dans l'historique.
+        5.  Recharger la page et s'assurer que l'historique unifié persiste.
 
 - [ ] **Étape 5 : Activation du Mode Hors-Ligne (Service Worker)**
     - [ ] Créer le fichier `sw.js` à la racine.
