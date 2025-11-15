@@ -160,3 +160,16 @@ document.addEventListener('DOMContentLoaded', () => {
     renderHistory(); // Initial render in case there's old data
     showScreen(selectionScreen); // Affiche l'écran de sélection au démarrage
 });
+
+// --- Enregistrement du Service Worker ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('Service Worker enregistré avec succès:', registration);
+            })
+            .catch(error => {
+                console.log('Échec de l\'enregistrement du Service Worker:', error);
+            });
+    });
+}

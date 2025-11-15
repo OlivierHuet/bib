@@ -29,8 +29,8 @@ Ce document sert à suivre l'avancement du développement de l'application "Bib"
     - [x] Connecter le scan réussi à la fonction de sauvegarde (`localStorage`).
     - **Validation :** (Sur HTTPS) Utiliser le mode caméra, scanner un code et vérifier qu'il s'ajoute à l'historique.
 
-- [ ] **Étape 4.1 : Unification des Historiques**
-    - [ ] Modifier la logique pour que les deux modes de scan (caméra et lecteur externe) utilisent la même liste d'historique (`<ul>`) et la même clé `localStorage`.
+- [x] **Étape 4.1 : Unification des Historiques**
+    - [x] Modifier la logique pour que les deux modes de scan (caméra et lecteur externe) utilisent la même liste d'historique (`<ul>`) et la même clé `localStorage`.
     - **Validation :**
         1.  Scanner un code-barres en mode lecteur externe.
         2.  Passer en mode caméra et vérifier que le code précédent est visible.
