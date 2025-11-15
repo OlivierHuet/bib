@@ -1,10 +1,10 @@
 const CACHE_NAME = 'bib-cache-v1';
 const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/css/style.css',
-    '/js/app.js',
-    '/js/html5-qrcode.min.js'
+    './',
+    './index.html',
+    './css/style.css',
+    './js/app.js',
+    './js/html5-qrcode.min.js'
 ];
 
 // Installer le Service Worker
