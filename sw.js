@@ -7,7 +7,7 @@ const ASSETS_TO_CACHE = [
     './js/html5-qrcode.min.js'
 ];
 
-// Installer le Service Worker
+// Installer le Service Worker 
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
