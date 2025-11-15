@@ -38,14 +38,14 @@ Ce document sert à suivre l'avancement du développement de l'application "Bib"
         4.  Retourner au mode lecteur externe et vérifier que les deux codes sont présents dans l'historique.
         5.  Recharger la page et s'assurer que l'historique unifié persiste.
 
-- [ ] **Étape 5 : Activation du Mode Hors-Ligne (Service Worker)**
-    - [ ] Créer le fichier `sw.js` à la racine.
-    - [ ] Lister tous les assets de l'application à mettre en cache.
-    - [ ] Ajouter le script d'enregistrement du Service Worker dans `js/app.js`.
+- [x] **Étape 5 : Activation du Mode Hors-Ligne (Service Worker)**
+    - [x] Créer le fichier `sw.js` à la racine.
+    - [x] Lister tous les assets de l'application à mettre en cache.
+    - [x] Ajouter le script d'enregistrement du Service Worker dans `js/app.js`.
     - **Validation :** Charger l'application, se déconnecter d'internet, et recharger la page. L'application doit fonctionner.
 
-- [ ] **Étape 6 : Finalisation et Améliorations**
-    - [ ] Ajouter un bouton "Vider l'historique" fonctionnel.
-    - [ ] Afficher des messages d'erreur clairs (ex: "HTTPS requis").
-    - [ ] Peaufiner le CSS pour une meilleure expérience.
+- [x] **Étape 6 : Finalisation et Améliorations**
+    - [x] Ajouter un bouton "Vider l'historique" fonctionnel.
+    - [x] Afficher des messages d'erreur clairs (ex: "HTTPS requis").
+    - [x] Peaufiner le CSS pour une meilleure expérience.
     - **Validation :** L'application est robuste et l'expérience utilisateur est fluide.

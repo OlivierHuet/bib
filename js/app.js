@@ -6,10 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const btnSelectCamera = document.getElementById('btn-select-camera');
     const btnSelectText = document.getElementById('btn-select-text');
+    const btnClearHistory = document.getElementById('btn-clear-history');
     const backButtons = document.querySelectorAll('.btn-back');
 
     const barcodeInput = document.getElementById('barcode-input');
     const cameraScanResult = document.getElementById('camera-scan-result');
+    const httpsWarningMessage = document.getElementById('https-warning-message');
 
     // --- State de l'application ---
     let barcodeHistory = [];
@@ -49,6 +51,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 list.appendChild(li);
             });
         });
+    }
+
+    /**
+     * Vide complètement l'historique.
+     */
+    function clearHistory() {
+        if (confirm("Êtes-vous sûr de vouloir vider tout l'historique ? Cette action est irréversible.")) {
+            barcodeHistory = [];
+            localStorage.removeItem(historyKey);
+            renderHistory();
+            console.log("L'historique a été vidé.");
+        }
     }
 
     /**
@@ -129,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => barcodeInput.focus(), 0); // Focus après la transition
     });
 
+    btnClearHistory.addEventListener('click', clearHistory);
+
     backButtons.forEach(button => {
         button.addEventListener('click', () => {
             stopCameraScanner();
@@ -159,6 +175,15 @@ document.addEventListener('DOMContentLoaded', () => {
     loadHistory();
     renderHistory(); // Initial render in case there's old data
     showScreen(selectionScreen); // Affiche l'écran de sélection au démarrage
+
+    // Vérification HTTPS au démarrage
+    if (window.location.protocol !== 'https:') {
+        httpsWarningMessage.classList.remove('hidden');
+        btnSelectCamera.disabled = true;
+        btnSelectCamera.textContent = "Scanner avec la caméra (HTTPS requis)";
+        btnSelectCamera.style.opacity = '0.6';
+        btnSelectCamera.style.cursor = 'not-allowed';
+    }
 });
 
 // --- Enregistrement du Service Worker ---
