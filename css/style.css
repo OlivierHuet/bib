@@ -142,6 +142,9 @@ li {
     text-align: left;
     background-color: #ffffff;
     transition: background-color 0.15s ease;
+    display: flex; /* Use flexbox */
+    justify-content: space-between; /* Push content to ends */
+    align-items: center; /* Vertically align items */
 }
 
 li:last-child {
@@ -153,7 +156,6 @@ li:hover {
 }
 
 .delete-barcode-btn {
-    float: right;
     background-color: #dc3545;
     color: white;
     border: none;
@@ -162,9 +164,9 @@ li:hover {
     font-size: 0.8em;
     cursor: pointer;
     transition: background-color 0.2s ease;
-    margin-left: 10px; /* Space between text and button */
     width: auto; /* Override button full width */
-    display: inline-block; /* Allow float to work */
+    display: inline-block;
+    flex-shrink: 0; /* Prevent button from shrinking */
 }
 
 .delete-barcode-btn:hover {
