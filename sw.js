@@ -4,7 +4,7 @@ const ASSETS_TO_CACHE = [
     './index.html',
     './css/style.css',
     './js/app.js',
-    './js/html5-qrcode.min.js'
+    'https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js'
 ];
 
 // Installer le Service Worker 
