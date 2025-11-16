@@ -49,6 +49,8 @@ Ce document sert à suivre l'avancement du développement de l'application "Bib"
     - [x] Afficher des messages d'erreur clairs (ex: "HTTPS requis").
     - [x] Peaufiner le CSS pour une meilleure expérience.
     - **Validation :** L'application est robuste et l'expérience utilisateur est fluide.
+	
+- [] **Etape 6.0 : Vérifier l'enregistrement du service worker dans la console et du stockage. 
 
 - [] **Étape 6.1 : Résoudre le problème de la caméra qui ne se charge pas**
 
