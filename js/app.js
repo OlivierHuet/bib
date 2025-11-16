@@ -103,18 +103,23 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
+        showScreen(cameraScannerScreen); // Ensure screen is visible before starting scanner
+        renderHistory(); // Affiche l'historique sur l'écran caméra
         cameraScanResult.textContent = "Démarrage de la caméra...";
+        
+        const readerDiv = document.getElementById('reader');
+        console.log('Dimensions of #reader before start:', readerDiv.offsetWidth, readerDiv.offsetHeight);
+
         const config = { fps: 10, qrbox: { width: 250, height: 250 } };
 
         html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
             .then(() => {
                 console.log("Scanner démarré.");
-                showScreen(cameraScannerScreen);
-                renderHistory(); // Affiche l'historique sur l'écran caméra
             })
             .catch(err => {
                 cameraScanResult.textContent = `❌ Erreur: ${err}. Assurez-vous d'utiliser HTTPS.`;
                 console.error("Erreur au démarrage de la caméra : ", err);
+                console.error("Détails de l'erreur :", err.name, err.message, err.stack);
                 showScreen(selectionScreen); // Retour au menu en cas d'erreur
             });
     }
