@@ -48,9 +48,29 @@ document.addEventListener('DOMContentLoaded', () => {
             barcodeHistory.forEach(barcode => {
                 const li = document.createElement('li');
                 li.textContent = barcode;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'X';
+                deleteButton.classList.add('delete-barcode-btn');
+                deleteButton.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent li click if any
+                    deleteBarcode(barcode);
+                });
+
+                li.appendChild(deleteButton);
                 list.appendChild(li);
             });
         });
+    }
+
+    /**
+     * Supprime un code-barres de l'historique.
+     * @param {string} barcodeToDelete Le code-barres à supprimer.
+     */
+    function deleteBarcode(barcodeToDelete) {
+        barcodeHistory = barcodeHistory.filter(barcode => barcode !== barcodeToDelete);
+        localStorage.setItem(historyKey, JSON.stringify(barcodeHistory));
+        renderHistory();
     }
 
     /**
@@ -178,8 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Initialisation ---
     loadHistory();
-    renderHistory(); // Initial render in case there's old data
     showScreen(selectionScreen); // Affiche l'écran de sélection au démarrage
+    renderHistory(); // Initial render in case there's old data
 
     // Vérification HTTPS au démarrage
     if (window.location.protocol !== 'https:') {

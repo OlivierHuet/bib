@@ -152,6 +152,25 @@ li:hover {
     background-color: #e2f0ff; /* Subtle hover effect */
 }
 
+.delete-barcode-btn {
+    float: right;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.8em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-left: 10px; /* Space between text and button */
+    width: auto; /* Override button full width */
+    display: inline-block; /* Allow float to work */
+}
+
+.delete-barcode-btn:hover {
+    background-color: #c82333;
+}
+
 #reader {
     width: 100%;
     border: 1px solid #dee2e6;
