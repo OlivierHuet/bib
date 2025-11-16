@@ -52,8 +52,8 @@ Ce document sert à suivre l'avancement du développement de l'application "Bib"
 	
 - [x] **Etape 6.0 : Vérifier l'enregistrement du service worker dans la console et du stockage. 
 
-- [] **Étape 6.1 : Résoudre le problème de la caméra qui ne se charge pas**
+- [x] **Étape 6.1 : Résoudre le problème de la caméra qui ne se charge pas**
 
-- [] **Étape 6.2 : Afficher la liste historique dans la page d'acceuil sous le bouton réinitialser**
+- [x] **Étape 6.2 : Afficher la liste historique dans la page d'acceuil sous le bouton réinitialiser**
 
-- [] **Étape 6.3 : En face de chaque ligne de l'historique mettre un bouton pour supprimer la lgne**
+- [x] **Étape 6.3 : En face de chaque ligne de l'historique mettre un bouton pour supprimer la lgne**
