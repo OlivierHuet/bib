@@ -49,3 +49,9 @@ Ce document sert à suivre l'avancement du développement de l'application "Bib"
     - [x] Afficher des messages d'erreur clairs (ex: "HTTPS requis").
     - [x] Peaufiner le CSS pour une meilleure expérience.
     - **Validation :** L'application est robuste et l'expérience utilisateur est fluide.
+
+- [] **Étape 6.1 : Résoudre le problème de la caméra qui ne se charge pas**
+
+- [] **Étape 6.2 : Afficher la liste historique dans la page d'acceuil sous le bouton réinitialser**
+
+- [] **Étape 6.3 : En face de chaque ligne de l'historique mettre un bouton pour supprimer la lgne**
