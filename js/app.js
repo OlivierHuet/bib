@@ -111,6 +111,52 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem(historyKey, JSON.stringify(barcodeHistory));
             renderHistory();
             // API call will go here later
+            fetchAndDisplayBookInfo(newItem); // Call the new function to fetch info
+        }
+    }
+
+    /**
+     * Récupère les informations d'un livre depuis l'API Google Books.
+     * @param {object} item L'objet de l'historique contenant l'ISBN.
+     * @returns {Promise<object>} Une promesse qui résout avec les informations du livre ou un objet d'erreur.
+     */
+    async function fetchAndDisplayBookInfo(item) {
+        isFetchingBookInfo = true; // Block new scans
+        // Disable scan buttons and input here (will be done in Étape 7.3)
+
+        try {
+            const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${item.isbn}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            if (data.totalItems > 0 && data.items && data.items[0].volumeInfo) {
+                const volumeInfo = data.items[0].volumeInfo;
+                item.bookInfo = {
+                    title: volumeInfo.title || 'Titre inconnu',
+                    authors: volumeInfo.authors || ['Auteur inconnu'],
+                    publishedDate: volumeInfo.publishedDate || 'Date inconnue',
+                    publisher: volumeInfo.publisher || 'Éditeur inconnu'
+                };
+                item.status = 'loaded';
+            } else {
+                item.bookInfo = { error: 'Livre non trouvé' };
+                item.status = 'error';
+            }
+        } catch (error) {
+            console.error("Erreur lors de la récupération des infos du livre:", error);
+            item.bookInfo = { error: `API_ERROR: ${error.message}` };
+            item.status = 'error';
+            // Check for rate limit error (Étape 7.5)
+            if (error.message.includes('403') || error.message.includes('rate limit')) { // Basic check, might need refinement
+                alert("Attention : La limite d'utilisation de l'API Google Books a peut-être été atteinte.");
+            }
+        } finally {
+            localStorage.setItem(historyKey, JSON.stringify(barcodeHistory));
+            renderHistory();
+            isFetchingBookInfo = false; // Unblock new scans
+            // Enable scan buttons and input here (will be done in Étape 7.3)
         }
     }
 
