@@ -1,1 +1,0 @@
-node C:\Users\OH\R-D\GeminiCLI\node_modules\@google\gemini-cli\dist\index.js
