@@ -14,9 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const httpsWarningMessage = document.getElementById('https-warning-message');
 
     // --- State de l'application ---
-    let barcodeHistory = [];
+    let barcodeHistory = []; // Now stores objects: { isbn: string, bookInfo: object|null, status: 'pending'|'loaded'|'error' }
     const historyKey = 'barcodeHistory';
     let html5QrCode = null;
+    let isFetchingBookInfo = false; // To block new scans during API call
 
     // --- Fonctions ---
 
@@ -45,16 +46,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const historyLists = document.querySelectorAll('.history-list');
         historyLists.forEach(list => {
             list.innerHTML = ''; // Clear the list first
-            barcodeHistory.forEach(barcode => {
+            barcodeHistory.forEach(item => { // item is now an object { isbn, bookInfo, status }
                 const li = document.createElement('li');
-                li.textContent = barcode;
+                let displayContent = item.isbn;
+
+                if (item.status === 'pending') {
+                    displayContent += ' (Chargement...)';
+                } else if (item.bookInfo && item.bookInfo.title) {
+                    const { title, authors, publishedDate, publisher } = item.bookInfo;
+                    const authorStr = authors ? `par ${authors.join(', ')}` : '';
+                    const yearStr = publishedDate ? `(${publishedDate.substring(0, 4)})` : '';
+                    const publisherStr = publisher ? `, ${publisher}` : '';
+                    displayContent = `${item.isbn} - ${title} ${authorStr} ${yearStr}${publisherStr}`;
+                } else if (item.bookInfo && item.bookInfo.error) {
+                    displayContent += ` - erreur:[${item.bookInfo.error}]`;
+                }
+
+                li.textContent = displayContent;
 
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'X';
                 deleteButton.classList.add('delete-barcode-btn');
                 deleteButton.addEventListener('click', (event) => {
                     event.stopPropagation(); // Prevent li click if any
-                    deleteBarcode(barcode);
+                    deleteBarcode(item.isbn); // Pass ISBN to delete
                 });
 
                 li.appendChild(deleteButton);
@@ -65,10 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Supprime un code-barres de l'historique.
-     * @param {string} barcodeToDelete Le code-barres à supprimer.
+     * @param {string} isbnToDelete L'ISBN à supprimer.
      */
-    function deleteBarcode(barcodeToDelete) {
-        barcodeHistory = barcodeHistory.filter(barcode => barcode !== barcodeToDelete);
+    function deleteBarcode(isbnToDelete) {
+        barcodeHistory = barcodeHistory.filter(item => item.isbn !== isbnToDelete);
         localStorage.setItem(historyKey, JSON.stringify(barcodeHistory));
         renderHistory();
     }
@@ -89,11 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
      * Ajoute un code-barres à l'historique, sauvegarde et met à jour l'affichage.
      * @param {string} barcode Le code-barres à ajouter.
      */
-    function addBarcode(barcode) {
-        if (barcode && !barcodeHistory.includes(barcode)) { // Évite les doublons
-            barcodeHistory.unshift(barcode); // Ajoute au début pour voir les plus récents en premier
+    async function addBarcode(barcode) { // Make it async for future API call
+        if (barcode && !barcodeHistory.some(item => item.isbn === barcode)) { // Évite les doublons
+            const newItem = { isbn: barcode, bookInfo: null, status: 'pending' }; // Add status for loading indicator
+            barcodeHistory.unshift(newItem); // Ajoute au début pour voir les plus récents en premier
             localStorage.setItem(historyKey, JSON.stringify(barcodeHistory));
             renderHistory();
+            // API call will go here later
         }
     }
 

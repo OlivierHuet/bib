@@ -57,3 +57,20 @@ Ce document sert à suivre l'avancement du développement de l'application "Bib"
 - [x] **Étape 6.2 : Afficher la liste historique dans la page d'acceuil sous le bouton réinitialiser**
 
 - [x] **Étape 6.3 : En face de chaque ligne de l'historique mettre un bouton pour supprimer la lgne**
+
+## Étape 7 : Intégration des Informations de Livre via Google Books API
+
+- [ ] **7.1 Préparation de la Structure de Données (localStorage)**
+    - [ ] Modifier la fonction `addBarcode` dans `js/app.js` pour stocker des objets JSON (ISBN + infos livre).
+    - [ ] Adapter `loadHistory` et `renderHistory` pour lire et afficher la nouvelle structure.
+- [ ] **7.2 Implémentation de l'Appel API Google Books**
+    - [ ] Créer une nouvelle fonction `fetchBookInfo(isbn)` dans `js/app.js` pour appeler l'API.
+    - [ ] Gérer les erreurs et les cas "non trouvé" dans `fetchBookInfo`.
+- [ ] **7.3 Intégration de l'API dans le Flux de Scan**
+    - [ ] Modifier `addBarcode` pour appeler `fetchBookInfo` après un scan.
+    - [ ] Implémenter le blocage des nouveaux scans pendant la requête API.
+- [ ] **7.4 Affichage des Informations et Gestion des Erreurs dans l'UI**
+    - [ ] Modifier `renderHistory` pour afficher les informations du livre ou les messages d'erreur.
+- [ ] **7.5 Gestion des Limites de Taux (Alertes Utilisateur)**
+    - [ ] Détecter les erreurs de limite de taux de l'API et alerter l'utilisateur.
+

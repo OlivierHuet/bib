@@ -23,6 +23,18 @@ Pour suivre l'avancement du développement, consultez notre [Plan de Projet](PLA
 
 - **Portabilité :** Développé en HTML, CSS et JavaScript standards, le projet est compatible avec la majorité des navigateurs modernes sur mobile et ordinateur.
 
+## Pile Technique
+
+Le projet "Bib" est une application web côté client construite avec les technologies suivantes :
+
+-   **HTML5** : Pour la structure sémantique des pages web.
+-   **CSS3** : Pour la mise en forme et le style de l'interface utilisateur.
+-   **JavaScript (ES6+)** : Pour la logique client-side, l'interactivité et la manipulation du DOM.
+-   **html5-qrcode library** : Une bibliothèque JavaScript tierce utilisée pour le scan de codes QR et de codes-barres via la caméra.
+-   **Web APIs** :
+    -   **localStorage** : Pour le stockage persistant de l'historique des codes-barres scannés.
+    -   **Service Worker API** : Pour implémenter les fonctionnalités de Progressive Web App (PWA), notamment le mode hors-ligne et la mise en cache des ressources.
+
 ## Configuration Requise
 
 ### Pour le Développement
