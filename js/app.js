@@ -22,6 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fonctions ---
 
     /**
+     * Active ou désactive les éléments de scan (input texte et boutons de sélection de mode).
+     * @param {boolean} disabled Si true, désactive les éléments; si false, les active.
+     */
+    function toggleScanInputs(disabled) {
+        barcodeInput.disabled = disabled;
+        btnSelectText.disabled = disabled;
+        // btnSelectCamera is handled separately due to HTTPS warning,
+        // but we can disable it if it's not already disabled by HTTPS check.
+        if (window.location.protocol === 'https:') { // Only enable if HTTPS is available
+            btnSelectCamera.disabled = disabled;
+        }
+    }
+
+    /**
      * Affiche un écran et masque les autres.
      * @param {HTMLElement} screenToShow L'écran à afficher.
      */
@@ -54,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     displayContent += ' (Chargement...)';
                 } else if (item.bookInfo && item.bookInfo.title) {
                     const { title, authors, publishedDate, publisher } = item.bookInfo;
-                    const authorStr = authors ? `par ${authors.join(', ')}` : '';
+                    const authorStr = authors && authors.length > 0 ? `par ${authors.join(', ')}` : '';
                     const yearStr = publishedDate ? `(${publishedDate.substring(0, 4)})` : '';
                     const publisherStr = publisher ? `, ${publisher}` : '';
                     displayContent = `${item.isbn} - ${title} ${authorStr} ${yearStr}${publisherStr}`;
@@ -110,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
             barcodeHistory.unshift(newItem); // Ajoute au début pour voir les plus récents en premier
             localStorage.setItem(historyKey, JSON.stringify(barcodeHistory));
             renderHistory();
-            // API call will go here later
             fetchAndDisplayBookInfo(newItem); // Call the new function to fetch info
         }
     }
@@ -121,8 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
      * @returns {Promise<object>} Une promesse qui résout avec les informations du livre ou un objet d'erreur.
      */
     async function fetchAndDisplayBookInfo(item) {
-        isFetchingBookInfo = true; // Block new scans
-        // Disable scan buttons and input here (will be done in Étape 7.3)
+        isFetchingBookInfo = true;
+        toggleScanInputs(true); // Disable inputs at the start of API call
 
         try {
             const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${item.isbn}`);
@@ -155,8 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             localStorage.setItem(historyKey, JSON.stringify(barcodeHistory));
             renderHistory();
-            isFetchingBookInfo = false; // Unblock new scans
-            // Enable scan buttons and input here (will be done in Étape 7.3)
+            isFetchingBookInfo = false;
+            toggleScanInputs(false); // Enable inputs after API call
         }
     }
 

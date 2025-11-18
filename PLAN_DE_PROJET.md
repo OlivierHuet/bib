@@ -63,9 +63,9 @@ Ce document sert à suivre l'avancement du développement de l'application "Bib"
 - [ ] **7.1 Préparation de la Structure de Données (localStorage)**
     - [ ] Modifier la fonction `addBarcode` dans `js/app.js` pour stocker des objets JSON (ISBN + infos livre).
     - [ ] Adapter `loadHistory` et `renderHistory` pour lire et afficher la nouvelle structure.
-- [ ] **7.2 Implémentation de l'Appel API Google Books**
-    - [ ] Créer une nouvelle fonction `fetchBookInfo(isbn)` dans `js/app.js` pour appeler l'API.
-    - [ ] Gérer les erreurs et les cas "non trouvé" dans `fetchBookInfo`.
+- [x] **7.2 Implémentation de l'Appel API Google Books**
+    - [x] Créer une nouvelle fonction `fetchBookInfo(isbn)` dans `js/app.js` pour appeler l'API.
+    - [x] Gérer les erreurs et les cas "non trouvé" dans `fetchBookInfo`.
 - [ ] **7.3 Intégration de l'API dans le Flux de Scan**
     - [ ] Modifier `addBarcode` pour appeler `fetchBookInfo` après un scan.
     - [ ] Implémenter le blocage des nouveaux scans pendant la requête API.
