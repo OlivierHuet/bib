@@ -69,8 +69,9 @@ Ce document sert à suivre l'avancement du développement de l'application "Bib"
 - [ ] **7.3 Intégration de l'API dans le Flux de Scan**
     - [ ] Modifier `addBarcode` pour appeler `fetchBookInfo` après un scan.
     - [ ] Implémenter le blocage des nouveaux scans pendant la requête API.
-- [ ] **7.4 Affichage des Informations et Gestion des Erreurs dans l'UI**
-    - [ ] Modifier `renderHistory` pour afficher les informations du livre ou les messages d'erreur.
-- [ ] **7.5 Gestion des Limites de Taux (Alertes Utilisateur)**
-    - [ ] Détecter les erreurs de limite de taux de l'API et alerter l'utilisateur.
+- [x] **7.4 Affichage des Informations et Gestion des Erreurs dans l'UI**
+    - [x] Modifier `renderHistory` pour afficher les informations du livre ou les messages d'erreur.
+- [x] **7.5 Gestion des Limites de Taux (Alertes Utilisateur)**
+    - [x] Détecter les erreurs de limite de taux de l'API et alerter l'utilisateur.
+- [x] **Étape 7 : Intégration des Informations de Livre via Google Books API**
 
