@@ -163,8 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert(`Synchronisation réussie ! ${result.updates.updatedRows || 0} ligne(s) ajoutée(s).`);
             } else if (response.status === 401) {
                 alert("Votre session a expiré. Veuillez vous reconnecter.");
-                // Rediriger vers la page de connexion du backend
-                window.location.href = `${config.backendUrl}/api/auth/login`;
+                // Rediriger vers la page de connexion du backend, en lui passant l'URL de retour
+                window.location.href = `${config.backendUrl}/api/auth/login?returnUrl=${encodeURIComponent(window.location.href)}`;
             } else {
                 const errorResult = await response.json();
                 throw new Error(errorResult.message || `Le serveur a répondu avec le statut ${response.status}`);
