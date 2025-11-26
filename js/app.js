@@ -149,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(`${config.backendUrl}/api/sync`, {
                 method: 'POST',
+                credentials: 'include', // Important for sending cookies cross-origin
                 headers: {
                     'Content-Type': 'application/json',
                 },
