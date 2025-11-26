@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         syncButton.disabled = true;
 
         try {
-            const response = await fetch('/api/sync', {
+            const response = await fetch(`${config.backendUrl}/api/sync`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (response.status === 401) {
                 alert("Votre session a expiré. Veuillez vous reconnecter.");
                 // Rediriger vers la page de connexion du backend
-                window.location.href = '/api/auth/login';
+                window.location.href = `${config.backendUrl}/api/auth/login`;
             } else {
                 const errorResult = await response.json();
                 throw new Error(errorResult.message || `Le serveur a répondu avec le statut ${response.status}`);
