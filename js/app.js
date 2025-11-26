@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSelectCamera = document.getElementById('btn-select-camera');
     const btnSelectText = document.getElementById('btn-select-text');
     const btnClearHistory = document.getElementById('btn-clear-history');
+    const btnSyncHistory = document.getElementById('btn-sync-history');
     const backButtons = document.querySelectorAll('.btn-back');
 
     const barcodeInput = document.getElementById('barcode-input');
@@ -111,6 +112,70 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem(historyKey);
             renderHistory();
             console.log("L'historique a été vidé.");
+        }
+    }
+
+    /**
+     * Synchronise l'historique avec le backend Google Sheets.
+     */
+    async function syncHistory() {
+        const historyToSync = barcodeHistory
+            .filter(item => item.status === 'loaded' && item.bookInfo && !item.bookInfo.error)
+            .map(item => ({
+                Isbn: item.isbn,
+                Title: item.bookInfo.title,
+                Authors: item.bookInfo.authors,
+                PublishedDate: item.bookInfo.publishedDate,
+                Publisher: item.bookInfo.publisher
+            }));
+
+        if (historyToSync.length === 0) {
+            alert("Il n'y a aucun livre dans l'historique à synchroniser.");
+            return;
+        }
+
+        const sheetUrl = prompt("Veuillez entrer l'URL de votre feuille Google Sheets :");
+        if (!sheetUrl) {
+            alert("Synchronisation annulée.");
+            return;
+        }
+
+        // Afficher un indicateur de chargement
+        const syncButton = document.getElementById('btn-sync-history');
+        const originalButtonText = syncButton.textContent;
+        syncButton.textContent = 'Synchronisation...';
+        syncButton.disabled = true;
+
+        try {
+            const response = await fetch('/api/sync', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    SheetUrl: sheetUrl,
+                    History: historyToSync
+                })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert(`Synchronisation réussie ! ${result.updates.updatedRows || 0} ligne(s) ajoutée(s).`);
+            } else if (response.status === 401) {
+                alert("Votre session a expiré. Veuillez vous reconnecter.");
+                // Rediriger vers la page de connexion du backend
+                window.location.href = '/api/auth/login';
+            } else {
+                const errorResult = await response.json();
+                throw new Error(errorResult.message || `Le serveur a répondu avec le statut ${response.status}`);
+            }
+        } catch (error) {
+            console.error('Erreur lors de la synchronisation:', error);
+            alert(`Échec de la synchronisation : ${error.message}`);
+        } finally {
+            // Restaurer le bouton
+            syncButton.textContent = originalButtonText;
+            syncButton.disabled = false;
         }
     }
 
@@ -245,6 +310,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     btnClearHistory.addEventListener('click', clearHistory);
+
+    btnSyncHistory.addEventListener('click', syncHistory);
 
     backButtons.forEach(button => {
         button.addEventListener('click', () => {
