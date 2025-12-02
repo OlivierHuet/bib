@@ -14,7 +14,7 @@ if ('serviceWorker' in navigator) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Affichage de la version
+    // Affichage de la version 
     const versionSpan = document.getElementById('app-version');
     if (versionSpan) {
         versionSpan.textContent = appVersion;
