@@ -1,17 +1,4 @@
-// --- Enregistrement du Service Worker ---
 const appVersion = window.APP_VERSION || 'dev';
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register(`/bib/sw.js?v=${appVersion}`)
-            .then(registration => {
-                console.log('Service Worker enregistré avec succès, version:', appVersion);
-            })
-            .catch(error => {
-                console.log('Échec de l'enregistrement du Service Worker:', error);
-            });
-    });
-}
 
 document.addEventListener('DOMContentLoaded', () => {
     // Affichage de la version 

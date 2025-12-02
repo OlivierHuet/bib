@@ -27,12 +27,9 @@ jobs:
           VERSION=${{ steps.get_hash.outputs.hash }}
           echo "Injecting version: $VERSION"
           # Le chemin est maintenant 'index.html' car l'action s'exécute à la racine du dépôt (le dossier 'bib')
-          sed -i "s/__VERSION__/$VERSION/g" index.html sw.js
+          sed -i "s/__VERSION__/$VERSION/g" index.html
           echo "--- Content of index.html after sed ---"
           cat index.html
-          echo "---------------------------------------"
-          echo "--- Content of sw.js after sed ---"
-          cat sw.js
           echo "---------------------------------------"
 
       - name: Deploy to GitHub Pages
