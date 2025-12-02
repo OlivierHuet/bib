@@ -3,12 +3,17 @@ name: Build and Deploy Frontend
 on:
   push:
     branches:
-      - main # Se déclenche uniquement sur un push vers la branche main
-  workflow_dispatch: # Permet de le lancer manuellement aussi
+      - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    
+    # Ajout de cette section pour donner les permissions
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
