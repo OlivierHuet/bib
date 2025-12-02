@@ -21,13 +21,13 @@ jobs:
         run: |
           VERSION=${{ steps.get_hash.outputs.hash }}
           echo "Injecting version: $VERSION"
-          # Utilise sed pour remplacer le placeholder. L'option -i modifie le fichier sur place.
-          # Important: sed sur macOS/BSD a une syntaxe différente pour -i. ubuntu-latest utilise GNU sed.
-          sed -i "s/__VERSION__/$VERSION/g" bib/index.html
+          # Le chemin est maintenant 'index.html' car l'action s'exécute à la racine du dépôt (le dossier 'bib')
+          sed -i "s/__VERSION__/$VERSION/g" index.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages # La branche de déploiement
-          folder: bib # Le dossier à déployer
+          # Le dossier à déployer est la racine du dépôt, représentée par '.'
+          folder: .
           clean: true # Nettoie la branche de destination avant le déploiement
