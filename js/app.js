@@ -1,4 +1,25 @@
+// --- Enregistrement du Service Worker ---
+const appVersion = new URL(location.href).searchParams.get('v') || 'dev';
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register(`/bib/sw.js?v=${appVersion}`)
+            .then(registration => {
+                console.log('Service Worker enregistré avec succès, version:', appVersion);
+            })
+            .catch(error => {
+                console.log('Échec de l\'enregistrement du Service Worker:', error);
+            });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Affichage de la version
+    const versionSpan = document.getElementById('app-version');
+    if (versionSpan) {
+        versionSpan.textContent = appVersion;
+    }
+
     // --- Éléments du DOM ---
     const selectionScreen = document.getElementById('selection-screen');
     const textScannerScreen = document.getElementById('text-scanner-screen');
@@ -354,17 +375,3 @@ document.addEventListener('DOMContentLoaded', () => {
         btnSelectCamera.style.cursor = 'not-allowed';
     }
 });
-
-// --- Enregistrement du Service Worker ---
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        console.log('Attempting to register Service Worker...'); // ADD THIS LINE
-            navigator.serviceWorker.register('/bib/sw.js')
-            .then(registration => {
-                console.log('Service Worker enregistré avec succès:', registration);
-            })
-            .catch(error => {
-                console.log('Échec de l\'enregistrement du Service Worker:', error);
-            });
-    });
-}

@@ -1,0 +1,33 @@
+name: Build and Deploy Frontend
+
+on:
+  push:
+    branches:
+      - main # Se déclenche uniquement sur un push vers la branche main
+  workflow_dispatch: # Permet de le lancer manuellement aussi
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get commit hash
+        id: get_hash
+        run: echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Inject version into files
+        run: |
+          VERSION=${{ steps.get_hash.outputs.hash }}
+          echo "Injecting version: $VERSION"
+          # Utilise sed pour remplacer le placeholder. L'option -i modifie le fichier sur place.
+          # Important: sed sur macOS/BSD a une syntaxe différente pour -i. ubuntu-latest utilise GNU sed.
+          sed -i "s/__VERSION__/$VERSION/g" bib/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages # La branche de déploiement
+          folder: bib # Le dossier à déployer
+          clean: true # Nettoie la branche de destination avant le déploiement
