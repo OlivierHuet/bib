@@ -1,3 +1,4 @@
+// Version placeholder: __VERSION__
 // Récupère la version depuis les paramètres de l'URL du script
 const version = new URL(location).searchParams.get('v');
 const CACHE_NAME = `bib-cache-${version || 'dev'}`;
