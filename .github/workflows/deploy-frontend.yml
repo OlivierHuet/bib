@@ -35,4 +35,4 @@ jobs:
           branch: gh-pages # La branche de déploiement
           # Le dossier à déployer est la racine du dépôt, représentée par '.'
           folder: .
-          clean: true # Nettoie la branche de destination avant le déploiement 
+          clean: true # Nettoie la branche de destination avant le déploiement
