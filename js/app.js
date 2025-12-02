@@ -1,5 +1,5 @@
 // --- Enregistrement du Service Worker ---
-const appVersion = new URL(location.href).searchParams.get('v') || 'dev';
+const appVersion = window.APP_VERSION || 'dev';
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -8,7 +8,7 @@ if ('serviceWorker' in navigator) {
                 console.log('Service Worker enregistré avec succès, version:', appVersion);
             })
             .catch(error => {
-                console.log('Échec de l\'enregistrement du Service Worker:', error);
+                console.log('Échec de l'enregistrement du Service Worker:', error);
             });
     });
 }
@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (versionSpan) {
         versionSpan.textContent = appVersion;
     }
+
 
     // --- Éléments du DOM ---
     const selectionScreen = document.getElementById('selection-screen');
